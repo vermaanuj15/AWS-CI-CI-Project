@@ -1,8 +1,16 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.11-slim-bullseye
 WORKDIR /app
 COPY . /app
 
-RUN apt update -y && apt install awscli -y
 
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 unzip -y && pip install -r requirements.txt
+RUN apt-get update && apt-get install -y   --no-install-recommends \
+   awscli \
+ ffmpeg \
+ libsm6 \
+ libxext6 \
+ unzip && \
+ apt-get clean && \
+ rm -rf /var/lib/apt/lists/*
+
+RUN pip install -r requirements.txt
 CMD ["python3", "app.py"]
